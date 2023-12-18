@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdujepeg4uy7x"]
+
+[ext_resource type="Script" path="res://sabotage_off.gd" id="1_a4224"]
+[ext_resource type="Texture2D" uid="uid://uodwvvimm670" path="res://assets/czyPolaczyc.png" id="2_2egq0"]
+
+[node name="sabotage_off" type="Node2D"]
+script = ExtResource("1_a4224")
+
+[node name="CzyPolaczyc" type="Sprite2D" parent="."]
+position = Vector2(580, 335)
+texture = ExtResource("2_2egq0")
+
+[node name="on" type="Button" parent="CzyPolaczyc"]
+offset_left = -56.0
+offset_top = 78.0
+offset_right = 43.0
+offset_bottom = 114.0
+text = "POŁĄCZ"
+
+[connection signal="button_down" from="CzyPolaczyc/on" to="." method="_on_on_button_down"]
+[connection signal="pressed" from="CzyPolaczyc/on" to="." method="_on_on_pressed"]

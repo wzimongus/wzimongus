@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://fve3slotupb2"]
+
+[ext_resource type="Script" path="res://sabotage_on.gd" id="1_rpvgw"]
+[ext_resource type="Texture2D" uid="uid://bt1eocqt8t7vt" path="res://assets/czyRozlaczyc.png" id="2_72bfg"]
+
+[node name="sabotage_on" type="Node2D"]
+script = ExtResource("1_rpvgw")
+
+[node name="CzyRozlaczyc" type="Sprite2D" parent="."]
+position = Vector2(580, 335)
+texture = ExtResource("2_72bfg")
+
+[node name="off" type="Button" parent="CzyRozlaczyc"]
+offset_left = -41.0
+offset_top = 100.0
+offset_right = 33.0
+offset_bottom = 131.0
+text = "WYŁĄCZ"
+
+[connection signal="wifi_off" from="." to="." method="_on_wifi_off"]
+[connection signal="button_down" from="CzyRozlaczyc/off" to="." method="_on_off_button_down"]

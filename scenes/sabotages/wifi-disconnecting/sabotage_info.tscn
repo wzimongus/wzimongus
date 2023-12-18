@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://cxjqbce4c48t1"]
+
+[ext_resource type="Script" path="res://sabotage_info.gd" id="1_whphi"]
+
+[node name="sabotage_info" type="Node2D"]
+script = ExtResource("1_whphi")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 266.0
+offset_top = 144.0
+offset_right = 874.0
+offset_bottom = 304.0
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.031
+offset_left = 57.848
+offset_top = 7.0
+offset_right = 577.17
+offset_bottom = 103.0
+text = "Utracono połączenie z siecią Wi-Fi. Musisz naprawić swoje połączenie!"
+
+[node name="settings" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 202.0
+offset_top = 76.0
+offset_right = 389.0
+offset_bottom = 118.0
+text = "PRZEJDŹ DO USTAWIEŃ"
+
+[connection signal="button_down" from="Panel/settings" to="." method="_on_settings_button_down"]
