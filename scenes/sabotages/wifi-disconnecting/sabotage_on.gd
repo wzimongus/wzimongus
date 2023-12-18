@@ -7,7 +7,7 @@ signal wifi_off
 
 func _on_off_button_down():
 	print("wi-fi off")
-	SabotageGlobal.wifi_off.emit()
-	get_tree().change_scene_to_file("res://sabotage_info.tscn")
+	#SabotageGlobal.wifi_off.emit()
+	get_tree().change_scene_to_file("res://scenes/sabotages/wifi-disconnecting/sabotage_info.tscn")
 
 

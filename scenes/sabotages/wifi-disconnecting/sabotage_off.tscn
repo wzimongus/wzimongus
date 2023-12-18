@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cdujepeg4uy7x"]
 
-[ext_resource type="Script" path="res://sabotage_off.gd" id="1_a4224"]
+[ext_resource type="Script" path="res://scenes/sabotages/wifi-disconnecting/sabotage_off.tscn" id="1_a4224"]
 [ext_resource type="Texture2D" uid="uid://uodwvvimm670" path="res://assets/czyPolaczyc.png" id="2_2egq0"]
 
 [node name="sabotage_off" type="Node2D"]

@@ -51,7 +51,7 @@ func _on_timer_timeout():
 func _on_settings_button_down():
 	
 	if(timer_default == 1):
-		get_tree().change_scene_to_file("res://sabotage_off.tscn")
+		get_tree().change_scene_to_file("res://scenes/sabotages/wifi-disconnecting/sabotage_off.tscn")
 		timer_default == 0
 	
 		
