@@ -8,11 +8,10 @@ extends Node2D
 # jak tylko rozgryze jak poprawnie połączyć tą scene z sygnałem emitowanym na scenie impostora (sabotage_on.tscn) to zamienie żeby ta scena była wywoływana przez ten sygnał a nie było przejście ze sceny do sceny
 # ale na chwile obecną jestem po 20 poradnikach na yt i przekopaniu połowy internetu i nie wiem dalej jak to zrobic poprawnie żeby działało i odbierało ten sygnał
 
-var countdown_seconds = 30
+var countdown_seconds = 5
 var timer_label : Label
 var timer : Timer
 var timer_default = 0
-
 
 
 
@@ -27,7 +26,6 @@ func _ready():
 
 	self.add_child(timer_label)
 	self.add_child(timer)
-
 
 	
 	# Start sabotazu (a co za tym idzie uruchomienie timera) , wysłanie info w konsoli
