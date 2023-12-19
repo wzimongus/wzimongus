@@ -38,7 +38,8 @@ func _ready():
 # Wyswietlanie timera
 func _on_timer_timeout():
 	countdown_seconds -= 1
-	timer_label.text = "Połącznie można naprawić za " + str(countdown_seconds) + " sekundy"
+	
+	timer_label.text = "Połącznie można naprawić za: " + str(countdown_seconds) + " sekund"
 	
 
 	if countdown_seconds <= 0:
