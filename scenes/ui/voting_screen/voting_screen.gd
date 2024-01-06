@@ -1,24 +1,48 @@
 extends Control
 
+## Ekran głosowania
+##
+## Interfejs użytkownika w grze, który pojawia się, gdy gracze decydują, kogo wyeliminować z gry. 
+## Wyświetla listę graczy, którzy mogą zostać wyeliminowani, oraz czas pozostały do końca głosowania.
+## Pozwala na wybór gracza, którego chcemy wyeliminować, oraz na skipowanie głosowania.
+## Po zakończeniu głosowania wyświetla ekran z wynikami głosowania.
+
+
+## Referencja do graczy
 @onready var players = get_node("%Players")
+## Referencja do etykiety z czasem głosowania
 @onready var end_vote_text = get_node("%EndVoteText")
+## Referencja do decyzji o skipowaniu
 @onready var skip_decision = get_node("%Decision")
+## Referencja do przycisku skipowania
 @onready var skip_button = get_node("%SkipButton")
+## Referencja do chatu
 @onready var chat = get_node("%Chat")
+## Referencja do tła chatu
 @onready var chat_background = get_node("%ChatBackground")
+## Referencja do inputu chatu
 @onready var chat_input = $Chat/ChatContainer/InputText
 
+## Ustawia czas głosowania
 @export var VOTING_TIME = 10
+## Timer odliczający czas głosowania
 @onready var voting_timer = Timer.new()
 
+
+## Czas wyświetlania ekranu z wynikami głosowania
 @export var EJECT_PLAYER_TIME = 5
+## Timer odliczający czas wyświetlania ekranu z wynikami głosowania
 @onready var eject_player_timer = Timer.new()
 
+## Referencja do boxa z graczami
 var player_box = preload("res://scenes/ui/voting_screen/player_box/player_box.tscn")
+## Referencja do ekranu z wynikami głosowania
 var ejection_screen = preload("res://scenes/ui/ejection_screen/ejection_screen.tscn")
 
+## Czas głosowania, zwiększa się co klatkę
 var time = 0
 
+## Czy gracz wybrał już swoją opcję
 var is_selected = false
 
 
@@ -28,25 +52,27 @@ func _ready():
 
 	chat.visible = false
 
-	# END VOTING TIMER
+	# Ustawia czas głosowania
 	add_child(voting_timer)
 	voting_timer.autostart = true
 	voting_timer.one_shot = true
 	voting_timer.connect("timeout", _on_end_voting_timer_timeout)
 	voting_timer.start(VOTING_TIME)
 
-	# EJECT PLAYER TIMER
+	# Ustawia czas wyświetlania ekranu z wynikami głosowania
 	add_child(eject_player_timer)
 	eject_player_timer.connect("timeout", _on_eject_player_timer_timeout)
 
 
+
 func _process(delta):
+	## Aktualizuje czas głosowania
 	if time < VOTING_TIME:
 		time += delta
 		var time_remaining = VOTING_TIME - time
 		end_vote_text.text = "Głosowanie kończy się za %02d sekund" % time_remaining
 
-
+## Wywołuje funkcję głosowania na serwerze
 func _on_player_voted(voted_player_key):
 	skip_button.disabled = true
 	GameManager.set_current_game_key("is_voted", true)
@@ -59,6 +85,7 @@ func _on_player_voted(voted_player_key):
 
 
 @rpc("any_peer", "call_remote", "reliable")
+## Funkcja dodająca głos na serwerze
 func _add_player_vote(player_key, voted_by):
 	GameManager.add_vote(player_key, voted_by)
 
@@ -84,8 +111,8 @@ func _on_decision_no_pressed():
 	skip_decision.visible = false
 
 
-## Renderuje boxy z graczami
 @rpc("call_local", "reliable")
+## Renderuje boxy z graczami
 func _render_player_boxes():
 	for child in players.get_children():
 		child.queue_free()
@@ -127,18 +154,18 @@ func _on_end_voting_timer_timeout():
 		else:
 			GameManager.set_most_voted_player.rpc(null)
 
-
-## Zmienia scene na ekran wyrzucenia
+## Wywołuje zmianę sceny na ekran z wynikami głosowania
 func _on_eject_player_timer_timeout():
 	_change_scene_to_ejection_screen.rpc()
 
 
 @rpc("any_peer", "call_local", "reliable")
+## Zmienia scenę na ekran z wynikami głosowania
 func _change_scene_to_ejection_screen():
 	self.get_parent().add_child(ejection_screen.instantiate())
 	self.queue_free()
 
-
+## Aktualizuje input
 func update_input():
 	if chat_input:
 		var input_status = !chat_input.visible
@@ -149,6 +176,7 @@ func get_most_voted_player_id():
 	var most_voted_players = []
 	var max_vote = 0
 
+	# Zlicza głosy
 	for vote_key in GameManager.get_current_game_key("votes").keys():
 		var votes_count = GameManager.get_current_game_key("votes")[vote_key].size()
 		if votes_count > max_vote:
@@ -156,19 +184,20 @@ func get_most_voted_player_id():
 			most_voted_players = [vote_key]
 		elif votes_count == max_vote:
 			most_voted_players.append(vote_key)
-
+	
+	# Zwraca gracza z największą ilością głosów
 	if most_voted_players.size() > 1 || most_voted_players.size() == 0:
 		return null
 	else:
 		return most_voted_players[0]
 
-
+## Otwiera chat
 func _on_open_chat_pressed():
 	chat.visible = true
 	chat._open_chat()
 	chat_background.visible = true
 
-
+## Zamyka chat
 func _on_close_chat_pressed():
 	chat.visible = false
 	chat_background.visible = false

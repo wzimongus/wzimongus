@@ -1,35 +1,62 @@
 extends Control
+
+## Sygnał wywoływany po wygraniu minigry
 signal minigame_end
 
+## Minigra - poprawna kombinacja
+##
+## W tej minigrze gracz musi ustawić odpowiednią kombinację przycisków, aby
+## włączyć światło. W tym celu musi ustawić odpowiednią ilość przycisków
+## na włączonych. Wskaźniki na górze ekranu pokazują, ile przycisków musi
+## być włączonych, aby włączyć światło. Po włączeniu światła gracz wygrywa
+## minigrę.
+
+## Referencja do kontrolki, która się zapala po 1/7 poprawnych przyciskach
 @onready var zero = get_node("%0")
+## Referencja do kontrolki, która się zapala po 3/7 poprawnych przyciskach
 @onready var thirty = get_node("%30")
+## Referencja do kontrolki, która się zapala po 4/7 poprawnych przyciskach
 @onready var fifty = get_node("%50")
+## Referencja do kontrolki, która się zapala po 6/7 poprawnych przyciskach
 @onready var eighty = get_node("%80")
+## Referencja do kontrolki, która się zapala po wszystkich poprawnych przyciskach
 @onready var hundred = get_node("%100")
 
+## Referencja do tekstury przełącznika
 @onready var switch_on_sprite = preload("res://scenes/minigames/correct_combination/assets/switch_on.png")
 
+## Referencja do kontenera, w którym znajdują się przyciski
 @onready var buttons_container = get_node("%Buttons")
 
+## Lista wszystkich zinicjalizowanych przycisków
 var all_buttons = []
-
+## Lista poprawnych zinicjalizowanych przycisków
 var correct_buttons = []
+## Lista niepoprawnych zinicjalizowanych przycisków
 var incorrect_buttons = []
-
+## Liczba poprawnie wciśniętych zinicjalizowanych przycisków
 var correct_pressed_count = 0
 
+## Lista progów, które muszą być spełnione, aby zapalić odpowiedni wskaźnik
 @onready var THRESHOLDS = [[1, 3, 5, 6], [1, 2, 4, 5], [1, 2, 3, 5], [1, 2, 5, 6]]
 
+## Liczba wszystkich przycisków
 const TOTAL_BUTTONS = 12
+## Liczba poprawnych przycisków
 const CORRECT_BUTTONS_COUNT = 7
 
+## Próg dla wskaźnika 0%
 var zero_threshold = 0
+## Próg dla wskaźnika 30%
 var thirty_threshold = 0
+## Próg dla wskaźnika 50%
 var fifty_threshold = 0
+## Próg dla wskaźnika 80%
 var eighty_threshold = 0
 
 
 func _ready():
+	# Ustawia wszystkie wskaźniki na niewidoczne
 	zero.visible = false
 	thirty.visible = false
 	fifty.visible = false
@@ -38,7 +65,7 @@ func _ready():
 
 	all_buttons = []
 
-	##Generuje 12 przycisków
+	# Generuje 12 przycisków
 	for i in range(TOTAL_BUTTONS):
 		var check_button = CheckButton.new()
 
@@ -56,8 +83,8 @@ func _ready():
 		all_buttons.append(check_button)
 		check_button.pressed.connect(_on_button_toggled)
 
-	##Losuje 5 przycisków, które będą poprawne (dodaje do listy correct_buttons)
-	##Reszta przycisków będzie niepoprawna (dodaje do listy incorrect_buttons)
+	# Losuje 5 przycisków, które będą poprawne (dodaje do listy correct_buttons)
+	# Reszta przycisków będzie niepoprawna (dodaje do listy incorrect_buttons)
 	all_buttons.shuffle()
 
 	for i in range(CORRECT_BUTTONS_COUNT):
@@ -66,7 +93,7 @@ func _ready():
 	for i in range(CORRECT_BUTTONS_COUNT, TOTAL_BUTTONS):
 		incorrect_buttons.append(all_buttons[i])
 	
-	##Losuje progi dla każdej kontrolki, a nastepnie przypisuje go do odpowiednich zmiennych
+	# Losuje progi dla każdej kontrolki, a nastepnie przypisuje go do odpowiednich zmiennych
 	var chosen_threshold = THRESHOLDS[randi() % THRESHOLDS.size()]
 
 	zero_threshold = chosen_threshold[0]
@@ -74,7 +101,7 @@ func _ready():
 	fifty_threshold = chosen_threshold[2]
 	eighty_threshold = chosen_threshold[3]
 
-
+## Funkcja wywoływana po wciśnięciu przełącznika
 func _on_button_toggled():
 	_update_button_sprite()
 
@@ -84,6 +111,7 @@ func _on_button_toggled():
 		if button.button_pressed:
 			correct_pressed_count += 1
 	
+	# Aktualizuje widoczność wskaźników
 	_update_indicators()
 	
 ##Aktualizuje widoczność wskaźników
@@ -105,6 +133,7 @@ func _update_indicators():
 			all_correct_pressed = false
 			break
 	
+	# Jeśli wszystkie poprawne przyciski są wciśnięte, wywołuje sygnał minigame_end
 	if all_correct_pressed:
 		hundred.visible = true
 
@@ -115,6 +144,7 @@ func _update_indicators():
 			button.disabled = true
 		minigame_end.emit()
 
+## Aktualizuje sprite przełącznika
 func _update_button_sprite():
 	for button in all_buttons:
 		button.get_child(0).flip_v = button.button_pressed
