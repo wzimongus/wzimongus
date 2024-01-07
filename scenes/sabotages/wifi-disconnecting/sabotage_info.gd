@@ -1,20 +1,16 @@
 extends Node2D
 
-# zamykanie sabotazu 1/2
-# scena powinna być tylko widoczna dla zwykłych graczy w momencie jak impostor włacza sabotaz
-# na chwile obecną działanie sabotażu to jest jakby dodatkowy task do zrobienia dla gracza 
-# w momencie odpalenia się scena puszcza timer na ustalony czas, po którym dopiero jest mozliwosc przejscia dlaej
-
-# jak tylko rozgryze jak poprawnie połączyć tą scene z sygnałem emitowanym na scenie impostora (sabotage_on.tscn) to zamienie żeby ta scena była wywoływana przez ten sygnał a nie było przejście ze sceny do sceny
-# ale na chwile obecną jestem po 20 poradnikach na yt i przekopaniu połowy internetu i nie wiem dalej jak to zrobic poprawnie żeby działało i odbierało ten sygnał
-
-var countdown_seconds = 5
+## Zmienna odpowiadająca za ilość czasu między startem sabotażu a możliwością jego wyłączenia 
+var countdown_seconds = 30
+## Zmienna ustawiająca etykietę timera odpowiadającego za odliczanie czasu między startem sabotażu a możliwością jego wyłączenia
 var timer_label : Label
+## Zmienna inicjalizująca timer odpowiadający za odliczanie czasu między startem sabotażu a możliwością jego wyłączenia
 var timer : Timer
+## Zmienna odpowiadająca za domyślny stan timera (0 - odlicza, 1 - skończył odliczanie) odpowiadającego za odliczanie czasu między startem sabotażu a możliwością jego wyłączenia
 var timer_default = 0
 
 
-
+## Funkcja startująca wraz z uruchomieniem sceny - uruchamia najpierw timer, a po zmianie wartości zmiennej timer_default z 0 na 1 pozwala na naciśniecie buttona
 func _ready():
 	
 	# Konfiguracja timera i miejsca jego wyswietlania
@@ -33,20 +29,21 @@ func _ready():
 	self.show()
 	timer.start()
 
-# Wyswietlanie timera
+## Obsługa timera odpowiadająca za ilość czasu między startem sabotażu a możliwością jego wyłączeni
 func _on_timer_timeout():
+	# odliczanie czasu na timerze
 	countdown_seconds -= 1
 	
 	timer_label.text = "Połącznie można naprawić za: " + str(countdown_seconds) + " sekund"
 	
-
+	
 	if countdown_seconds <= 0:
 		timer_label.text = "Połącznie można naprawić"
 		timer_label.position = Vector2(460, 185);
 		timer_default = 1
 		
 
-# Przejscie do kolejnego etapu wyłączania sabotazu, mozliwe dopiero gdy upłynie ustawiony czas od włączenie sabotazu
+## Obsługa przycisku settings który przełącza do sceny końcowej (mozliwe dopiero gdy upłynie ustawiony czas na timerze)
 func _on_settings_button_down():
 	
 	if(timer_default == 1):

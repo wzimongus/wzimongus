@@ -1,11 +1,10 @@
 extends Node2D
 
-# uruchamianie sabotazu
-# w zamysle ta scena powinna zostac zastapiona przez interaction point z paska impostora
+# uruchamianie sabotazu - w zamysle ta scena powinna zostac zastapiona przez interaction point z paska impostora
 
-signal wifi_off
+# signal wifi_off
 
-
+## Obsługa przycisku off - przejście do sceny "sabotage_info" uruchamiającej sabotaż
 func _on_off_button_down():
 	print("wi-fi off")
 	#SabotageGlobal.wifi_off.emit()

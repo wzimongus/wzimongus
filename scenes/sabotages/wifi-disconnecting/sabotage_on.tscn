@@ -17,5 +17,4 @@ offset_right = 33.0
 offset_bottom = 131.0
 text = "WYŁĄCZ"
 
-[connection signal="wifi_off" from="." to="." method="_on_wifi_off"]
 [connection signal="button_down" from="CzyRozlaczyc/off" to="." method="_on_off_button_down"]
